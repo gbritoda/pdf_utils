@@ -1,0 +1,23 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+HERE="$(dirname "$(readlink -f "$0")")"
+VENVDIR="$HERE/pdfutils.venv"
+REQS="$HERE/requirements.txt"
+
+export PYTHONPATH="$HERE"
+
+if [[ ! -d "$VENVDIR" ]]; then
+    python3 -m venv "$VENVDIR"
+    (
+        if [[ -f "$REQS" ]]; then
+            . "$VENVDIR/bin/activate"
+            pip install -r "$REQS"
+        fi
+    )
+fi
+
+. "$VENVDIR/bin/activate"
+
+python3 "$HERE/pdfutils/main.py" "$@"
